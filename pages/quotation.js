@@ -5,7 +5,7 @@ const QuotationPage = () => {
   const [price, setPrice] = useState('');
   const [warranty, setWarranty] = useState('');
   const [gps, setGps] = useState(false);
-  const [adminExpenses, setAdminExpenses] = useState('default');
+  const [adminExpenses, setAdminExpenses] = useState('0');
   const [customAdminExpense, setCustomAdminExpense] = useState('');
   const [downPayment, setDownPayment] = useState('');
   const [interestRate, setInterestRate] = useState('none');
@@ -18,6 +18,8 @@ const QuotationPage = () => {
   const [year, setYear] = useState('');
   const [vin, setVin] = useState('');
 
+  const [expandedSection, setExpandedSection] = useState('vehicle');
+
   // Define options for select fields
   const warrantyOptions = [
     { value: '0', label: 'No Warranty' },
@@ -25,7 +27,8 @@ const QuotationPage = () => {
     { value: '1695', label: '2 Years Warranty' },
   ];
   const adminExpenseOptions = [
-    { value: 'default', label: 'Default ($1425)' },
+    { value: '0', label: 'No administrative expenses' },
+    { value: '1425', label: 'Default ($1425)' },
     { value: 'other', label: 'Other' },
   ];
   const interestRateOptions = [
@@ -54,7 +57,7 @@ const QuotationPage = () => {
   const gst = subtotal * 0.05;
   const qst = subtotal * 0.09975;
   const totalWithTaxes = subtotal + gst + qst;
-  const adminExpense = adminExpenses === 'other' ? parseFloat(customAdminExpense) || 0 : 1425;
+  const adminExpense = adminExpenses === 'other' ? parseFloat(customAdminExpense) || 0 : parseFloat(adminExpenses);
   const totalWithAdminExpenses = totalWithTaxes + adminExpense;
   const downPaymentAmount = parseFloat(downPayment) || 0;
   const thirdSubtotal = totalWithAdminExpenses - downPaymentAmount;
@@ -80,213 +83,243 @@ const QuotationPage = () => {
 
   const monthlyPayment = calculateMonthlyPayment();
 
+  const toggleSection = (section) => {
+    setExpandedSection(expandedSection === section ? null : section);
+  };
+
+  const SectionHeader = ({ title, section }) => (
+    <div 
+      className="flex justify-between items-center bg-blue-600 text-white p-4 rounded-t-lg cursor-pointer"
+      onClick={() => toggleSection(section)}
+    >
+      <h2 className="text-xl font-semibold">{title}</h2>
+      <span className="text-2xl">{expandedSection === section ? '▲' : '▼'}</span>
+    </div>
+  );
+
   return (
     <Layout>
       <div className="container mx-auto p-4 md:p-8 bg-gray-100 min-h-screen">
         <div className="bg-white shadow-2xl rounded-lg overflow-hidden">
           {/* Header */}
-          <div className="bg-blue-600 text-white p-6 md:p-8">
-            <h1 className="text-3xl md:text-4xl font-bold">Quotation</h1>
-            <p className="mt-2 text-blue-100">Vehicle Purchase and Financing</p>
+          <div className="bg-blue-700 text-white p-6 md:p-8">
+            <h1 className="text-3xl md:text-4xl font-bold">Vehicle Quotation</h1>
+            <p className="mt-2 text-blue-100">Purchase and Financing Details</p>
           </div>
 
-          <form className="p-6 md:p-8 space-y-8">
+          <form className="p-4 md:p-8 space-y-6">
             {/* Vehicle Information Section */}
-            <section className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Vehicle Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div>
-                  <label htmlFor="model" className="block text-sm font-medium text-gray-700">Model</label>
-                  <input
-                    id="model"
-                    type="text"
-                    value={model}
-                    onChange={(e) => setModel(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  />
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <SectionHeader title="Vehicle Information" section="vehicle" />
+              {expandedSection === 'vehicle' && (
+                <div className="p-4 bg-gray-50">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                      <label htmlFor="model" className="block text-sm font-medium text-gray-700 ">Model</label>
+                      <input
+                        id="model"
+                        type="text"
+                        value={model}
+                        onChange={(e) => setModel(e.target.value)}
+                        required
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="subModel" className="block text-sm font-medium text-gray-700">Submodel</label>
+                      <input
+                        id="subModel"
+                        type="text"
+                        value={subModel}
+                        onChange={(e) => setSubModel(e.target.value)}
+                        required
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="year" className="block text-sm font-medium text-gray-700">Year</label>
+                      <input
+                        id="year"
+                        type="number"
+                        value={year}
+                        onChange={(e) => setYear(e.target.value)}
+                        required
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="vin" className="block text-sm font-medium text-gray-700">VIN</label>
+                      <input
+                        id="vin"
+                        type="text"
+                        value={vin}
+                        onChange={(e) => setVin(e.target.value)}
+                        required
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="subModel" className="block text-sm font-medium text-gray-700">Submodel</label>
-                  <input
-                    id="subModel"
-                    type="text"
-                    value={subModel}
-                    onChange={(e) => setSubModel(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="year" className="block text-sm font-medium text-gray-700">Year</label>
-                  <input
-                    id="year"
-                    type="number"
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="vin" className="block text-sm font-medium text-gray-700">VIN</label>
-                  <input
-                    id="vin"
-                    type="text"
-                    value={vin}
-                    onChange={(e) => setVin(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  />
-                </div>
-              </div>
-            </section>
+              )}
+            </div>
 
             {/* Financial Information Section */}
-            <section className="bg-red-50 p-6 rounded-lg border border-red-200">
-              <h2 className="text-2xl font-semibold mb-4 text-red-700">Financial Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div>
-                  <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
-                  <input
-                    id="price"
-                    type="number"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-black p-2"
-                  />
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <SectionHeader title="Financial Information" section="financial" />
+              {expandedSection === 'financial' && (
+                <div className="p-4 bg-red-50">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                      <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
+                      <input
+                        id="price"
+                        type="number"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                        required
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="warranty" className="block text-sm font-medium text-gray-700">Warranty</label>
+                      <select
+                        id="warranty"
+                        value={warranty}
+                        onChange={(e) => setWarranty(e.target.value)}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                      >
+                        {warrantyOptions.map(option => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex items-center">
+                      <label htmlFor="gps" className="flex items-center text-sm font-medium text-gray-700">
+                        <input
+                          id="gps"
+                          type="checkbox"
+                          checked={gps}
+                          onChange={(e) => setGps(e.target.checked)}
+                          className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                        />
+                        GPS
+                      </label>
+                    </div>
+                    <div>
+                      <label htmlFor="adminExpenses" className="block text-sm font-medium text-gray-700">Administrative Expenses</label>
+                      <select
+                        id="adminExpenses"
+                        value={adminExpenses}
+                        onChange={handleAdminExpenseChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                      >
+                        {adminExpenseOptions.map(option => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      {adminExpenses === 'other' && (
+                        <input
+                          type="number"
+                          value={customAdminExpense}
+                          onChange={(e) => setCustomAdminExpense(e.target.value)}
+                          className="mt-2 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                          placeholder="Specify amount"
+                        />
+                      )}
+                    </div>
+                    <div>
+                      <label htmlFor="downPayment" className="block text-sm font-medium text-gray-700">Down Payment</label>
+                      <input
+                        id="downPayment"
+                        type="number"
+                        value={downPayment}
+                        onChange={(e) => setDownPayment(e.target.value)}
+                        required
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="interestRate" className="block text-sm font-medium text-gray-700">Interest Rate</label>
+                      <select
+                        id="interestRate"
+                        value={interestRate}
+                        onChange={handleInterestRateChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                      >
+                        {interestRateOptions.map(option => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      {interestRate === 'other' && (
+                        <input
+                          type="number"
+                          value={customInterestRate}
+                          onChange={(e) => setCustomInterestRate(e.target.value)}
+                          className="mt-2 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                          placeholder="Specify rate"
+                        />
+                      )}
+                    </div>
+                    <div>
+                      <label htmlFor="financingTerm" className="block text-sm font-medium text-gray-700">Financing Term</label>
+                      <select
+                        id="financingTerm"
+                        value={financingTerm}
+                        onChange={(e) => setFinancingTerm(e.target.value)}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                      >
+                        {financingTermOptions.map(option => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="warranty" className="block text-sm font-medium text-gray-700">Warranty</label>
-                  <select
-                    id="warranty"
-                    value={warranty}
-                    onChange={(e) => setWarranty(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
-                  >
-                    {warrantyOptions.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex items-center">
-                  <label htmlFor="gps" className="flex items-center text-sm font-medium text-gray-700">
-                    <input
-                      id="gps"
-                      type="checkbox"
-                      checked={gps}
-                      onChange={(e) => setGps(e.target.checked)}
-                      className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded"
-                    />
-                    GPS
-                  </label>
-                </div>
-                <div>
-                  <label htmlFor="adminExpenses" className="block text-sm font-medium text-gray-700">Administrative Expenses</label>
-                  <select
-                    id="adminExpenses"
-                    value={adminExpenses}
-                    onChange={handleAdminExpenseChange}
-                    className="mt-1 block w-full border border-red-300 rounded-md shadow-sm p-2 text-black"
-                  >
-                    {adminExpenseOptions.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  {adminExpenses === 'other' && (
-                    <input
-                      type="number"
-                      value={customAdminExpense}
-                      onChange={(e) => setCustomAdminExpense(e.target.value)}
-                      className="mt-2 block w-full border border-red-300 rounded-md shadow-sm p-2"
-                      placeholder="Specify amount"
-                    />
-                  )}
-                </div>
-                <div>
-                  <label htmlFor="downPayment" className="block text-sm font-medium text-gray-700">Down Payment</label>
-                  <input
-                    id="downPayment"
-                    type="number"
-                    value={downPayment}
-                    onChange={(e) => setDownPayment(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-black p-2"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="interestRate" className="block text-sm font-medium text-gray-700">Interest Rate</label>
-                  <select
-                    id="interestRate"
-                    value={interestRate}
-                    onChange={handleInterestRateChange}
-                    className="mt-1 block w-full border border-red-300 rounded-md shadow-sm p-2 text-black"
-                  >
-                    {interestRateOptions.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  {interestRate === 'other' && (
-                    <input
-                      type="number"
-                      value={customInterestRate}
-                      onChange={(e) => setCustomInterestRate(e.target.value)}
-                      className="mt-2 block w-full border border-red-300 rounded-md shadow-sm p-2"
-                      placeholder="Specify rate"
-                    />
-                  )}
-                </div>
-                <div>
-                  <label htmlFor="financingTerm" className="block text-sm font-medium text-gray-700">Financing Term</label>
-                  <select
-                    id="financingTerm"
-                    value={financingTerm}
-                    onChange={(e) => setFinancingTerm(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
-                  >
-                    {financingTermOptions.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </section>
+              )}
+            </div>
 
             {/* Summary Section */}
-            <section className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Summary</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4 text-black">
-                  <SummaryItem label="Subtotal" value={subtotal} />
-                  <SummaryItem label="GST (5%)" value={gst} />
-                  <SummaryItem label="QST (9.975%)" value={qst} />
-                  <SummaryItem label="Total with Taxes" value={totalWithTaxes} highlight />
-                  <SummaryItem label="Administrative Expenses" value={adminExpense} />
-                  <SummaryItem label="Total with Admin Expenses" value={totalWithAdminExpenses} highlight />
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <SectionHeader title="Summary" section="summary" />
+              {expandedSection === 'summary' && (
+                <div className="p-4 bg-gray-50 text-black">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <SummaryItem label="Subtotal" value={subtotal} />
+                      <SummaryItem label="GST (5%)" value={gst} />
+                      <SummaryItem label="QST (9.975%)" value={qst} />
+                      <SummaryItem label="Total with Taxes" value={totalWithTaxes} highlight />
+                      <SummaryItem label="Administrative Expenses" value={adminExpense} />
+                      <SummaryItem label="Total with Admin Expenses" value={totalWithAdminExpenses} highlight />
+                    </div>
+                    <div className="space-y-2">
+                      <SummaryItem label="Down Payment" value={downPaymentAmount} />
+                      <SummaryItem label="Subtotal after Down Payment" value={thirdSubtotal} highlight />
+                      <SummaryItem label="Monthly Payment" value={monthlyPayment} highlight />
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-4 text-black">
-                  <SummaryItem label="Down Payment" value={downPaymentAmount} />
-                  <SummaryItem label="Subtotal after Down Payment" value={thirdSubtotal} highlight />
-                  <SummaryItem label="Monthly Payment" value={monthlyPayment} highlight />
-                </div>
-              </div>
-            </section>
+              )}
+            </div>
 
-            {/* Action Buttons */}
-            <div className="flex justify-end space-x-4">
-              <button type="button" className="px-6 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">
+
+
+
+
+  {/* Action Buttons */}
+            <div className="flex justify-end space-x-4 mt-6">
+              <button type="button" className="px-6 py-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500">
                 Save Draft
               </button>
-              <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+              <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
                 Generate Quote
               </button>
             </div>
