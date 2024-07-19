@@ -82,83 +82,88 @@ const QuotationPage = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto p-6">
-        <div className="bg-white shadow-lg rounded-lg p-8">
-          <h1 className="text-3xl font-bold mb-6 text-gray-800">Quotation Form</h1>
-          <form>
+      <div className="container mx-auto p-4 md:p-8 bg-gray-100 min-h-screen">
+        <div className="bg-white shadow-2xl rounded-lg overflow-hidden">
+          {/* Header */}
+          <div className="bg-blue-600 text-white p-6 md:p-8">
+            <h1 className="text-3xl md:text-4xl font-bold">Quotation</h1>
+            <p className="mt-2 text-blue-100">Vehicle Purchase and Financing</p>
+          </div>
+
+          <form className="p-6 md:p-8 space-y-8">
             {/* Vehicle Information Section */}
-            <div className="bg-gray-100 p-6 rounded-lg border border-gray-300 mb-6">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-700">Vehicle Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <section className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Vehicle Information</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div>
-                  <label htmlFor="model" className="block text-sm font-medium text-gray-600">Model</label>
+                  <label htmlFor="model" className="block text-sm font-medium text-gray-700">Model</label>
                   <input
                     id="model"
                     type="text"
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
                     required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                   />
                 </div>
                 <div>
-                  <label htmlFor="subModel" className="block text-sm font-medium text-gray-600">Submodel</label>
+                  <label htmlFor="subModel" className="block text-sm font-medium text-gray-700">Submodel</label>
                   <input
                     id="subModel"
                     type="text"
                     value={subModel}
                     onChange={(e) => setSubModel(e.target.value)}
                     required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                   />
                 </div>
                 <div>
-                  <label htmlFor="year" className="block text-sm font-medium text-gray-600">Year</label>
+                  <label htmlFor="year" className="block text-sm font-medium text-gray-700">Year</label>
                   <input
                     id="year"
                     type="number"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                   />
                 </div>
                 <div>
-                  <label htmlFor="vin" className="block text-sm font-medium text-gray-600">VIN</label>
+                  <label htmlFor="vin" className="block text-sm font-medium text-gray-700">VIN</label>
                   <input
                     id="vin"
                     type="text"
                     value={vin}
                     onChange={(e) => setVin(e.target.value)}
                     required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                   />
                 </div>
               </div>
-            </div>
+            </section>
 
             {/* Financial Information Section */}
-            <div className="bg-red-50 p-6 rounded-lg border border-red-300 mb-6">
-              <h3 className="text-2xl font-semibold mb-4 text-red-600">Financial Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <section className="bg-red-50 p-6 rounded-lg border border-red-200">
+              <h2 className="text-2xl font-semibold mb-4 text-red-700">Financial Information</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
-                  <label htmlFor="price" className="block text-sm font-medium text-gray-600">Price</label>
+                  <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
                   <input
                     id="price"
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-black p-2"
                   />
                 </div>
                 <div>
-                  <label htmlFor="warranty" className="block text-sm font-medium text-gray-600">Warranty</label>
+                  <label htmlFor="warranty" className="block text-sm font-medium text-gray-700">Warranty</label>
                   <select
                     id="warranty"
                     value={warranty}
                     onChange={(e) => setWarranty(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-black"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
                   >
                     {warrantyOptions.map(option => (
                       <option key={option.value} value={option.value}>
@@ -167,23 +172,25 @@ const QuotationPage = () => {
                     ))}
                   </select>
                 </div>
-                <div>
-                  <label htmlFor="gps" className="block text-sm font-medium text-gray-600">GPS</label>
-                  <input
-                    id="gps"
-                    type="checkbox"
-                    checked={gps}
-                    onChange={(e) => setGps(e.target.checked)}
-                    className="mt-1"
-                  />
+                <div className="flex items-center">
+                  <label htmlFor="gps" className="flex items-center text-sm font-medium text-gray-700">
+                    <input
+                      id="gps"
+                      type="checkbox"
+                      checked={gps}
+                      onChange={(e) => setGps(e.target.checked)}
+                      className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                    />
+                    GPS
+                  </label>
                 </div>
                 <div>
-                  <label htmlFor="adminExpenses" className="block text-sm font-medium text-gray-600">Administrative Expenses</label>
+                  <label htmlFor="adminExpenses" className="block text-sm font-medium text-gray-700">Administrative Expenses</label>
                   <select
                     id="adminExpenses"
                     value={adminExpenses}
                     onChange={handleAdminExpenseChange}
-                    className="mt-1 block w-full border border-red-300 rounded-md shadow-sm text-black"
+                    className="mt-1 block w-full border border-red-300 rounded-md shadow-sm p-2 text-black"
                   >
                     {adminExpenseOptions.map(option => (
                       <option key={option.value} value={option.value}>
@@ -196,29 +203,29 @@ const QuotationPage = () => {
                       type="number"
                       value={customAdminExpense}
                       onChange={(e) => setCustomAdminExpense(e.target.value)}
-                      className="mt-2 block w-full border border-red-300 rounded-md shadow-sm"
+                      className="mt-2 block w-full border border-red-300 rounded-md shadow-sm p-2"
                       placeholder="Specify amount"
                     />
                   )}
                 </div>
                 <div>
-                  <label htmlFor="downPayment" className="block text-sm font-medium text-gray-600">Down Payment</label>
+                  <label htmlFor="downPayment" className="block text-sm font-medium text-gray-700">Down Payment</label>
                   <input
                     id="downPayment"
                     type="number"
                     value={downPayment}
                     onChange={(e) => setDownPayment(e.target.value)}
                     required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-black p-2"
                   />
                 </div>
                 <div>
-                  <label htmlFor="interestRate" className="block text-sm font-medium text-gray-600">Interest Rate</label>
+                  <label htmlFor="interestRate" className="block text-sm font-medium text-gray-700">Interest Rate</label>
                   <select
                     id="interestRate"
                     value={interestRate}
                     onChange={handleInterestRateChange}
-                    className="mt-1 block w-full border border-red-300 rounded-md shadow-sm text-black"
+                    className="mt-1 block w-full border border-red-300 rounded-md shadow-sm p-2 text-black"
                   >
                     {interestRateOptions.map(option => (
                       <option key={option.value} value={option.value}>
@@ -231,18 +238,18 @@ const QuotationPage = () => {
                       type="number"
                       value={customInterestRate}
                       onChange={(e) => setCustomInterestRate(e.target.value)}
-                      className="mt-2 block w-full border border-red-300 rounded-md shadow-sm"
+                      className="mt-2 block w-full border border-red-300 rounded-md shadow-sm p-2"
                       placeholder="Specify rate"
                     />
                   )}
                 </div>
                 <div>
-                  <label htmlFor="financingTerm" className="block text-sm font-medium text-gray-600">Financing Term</label>
+                  <label htmlFor="financingTerm" className="block text-sm font-medium text-gray-700">Financing Term</label>
                   <select
                     id="financingTerm"
                     value={financingTerm}
                     onChange={(e) => setFinancingTerm(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-black"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
                   >
                     {financingTermOptions.map(option => (
                       <option key={option.value} value={option.value}>
@@ -252,33 +259,36 @@ const QuotationPage = () => {
                   </select>
                 </div>
               </div>
-            </div>
+            </section>
 
             {/* Summary Section */}
-            <div className="bg-gray-200 p-6 rounded-lg border border-gray-400 mb-6">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Summary</h3>
+            <section className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Summary</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-4 bg-red-100 rounded-lg">
-                  <p className="font-medium text-gray-700">Subtotal:</p>
-                  <p className="text-lg font-bold text-gray-900">${subtotal.toFixed(2)}</p>
-                  <p className="font-medium text-gray-700">GST (5%):</p>
-                  <p className="text-lg font-bold text-gray-900">${gst.toFixed(2)}</p>
-                  <p className="font-medium text-gray-700">QST (9.975%):</p>
-                  <p className="text-lg font-bold text-gray-900">${qst.toFixed(2)}</p>
-                  <p className="font-medium text-gray-700">Total with Taxes:</p>
-                  <p className="text-lg font-bold text-gray-900">${totalWithTaxes.toFixed(2)}</p>
-                  <p className="font-medium text-gray-700">Administrative Expenses:</p>
-                  <p className="text-lg font-bold text-gray-900">${adminExpense.toFixed(2)}</p>
-                  <p className="font-medium text-gray-700">Total with Admin Expenses:</p>
-                  <p className="text-lg font-bold text-gray-900">${totalWithAdminExpenses.toFixed(2)}</p>
-                  <p className="font-medium text-gray-700">Down Payment:</p>
-                  <p className="text-lg font-bold text-gray-900">${downPaymentAmount.toFixed(2)}</p>
-                  <p className="font-medium text-gray-700">Subtotal after Down Payment:</p>
-                  <p className="text-lg font-bold text-gray-900">${thirdSubtotal.toFixed(2)}</p>
-                  <p className="font-medium text-gray-700">Monthly Payment:</p>
-                  <p className="text-lg font-bold text-gray-900">${monthlyPayment.toFixed(2)}</p>
+                <div className="space-y-4 text-black">
+                  <SummaryItem label="Subtotal" value={subtotal} />
+                  <SummaryItem label="GST (5%)" value={gst} />
+                  <SummaryItem label="QST (9.975%)" value={qst} />
+                  <SummaryItem label="Total with Taxes" value={totalWithTaxes} highlight />
+                  <SummaryItem label="Administrative Expenses" value={adminExpense} />
+                  <SummaryItem label="Total with Admin Expenses" value={totalWithAdminExpenses} highlight />
+                </div>
+                <div className="space-y-4 text-black">
+                  <SummaryItem label="Down Payment" value={downPaymentAmount} />
+                  <SummaryItem label="Subtotal after Down Payment" value={thirdSubtotal} highlight />
+                  <SummaryItem label="Monthly Payment" value={monthlyPayment} highlight />
                 </div>
               </div>
+            </section>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end space-x-4">
+              <button type="button" className="px-6 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">
+                Save Draft
+              </button>
+              <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                Generate Quote
+              </button>
             </div>
           </form>
         </div>
@@ -286,5 +296,13 @@ const QuotationPage = () => {
     </Layout>
   );
 };
+
+// Helper component for summary items
+const SummaryItem = ({ label, value, highlight = false }) => (
+  <div className={`flex justify-between ${highlight ? 'font-bold' : ''}`}>
+    <span>{label}:</span>
+    <span>${typeof value === 'number' ? value.toFixed(2) : value}</span>
+  </div>
+);
 
 export default QuotationPage;
