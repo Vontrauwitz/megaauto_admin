@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Layout from '../components/Layout';
+import { useReactToPrint } from 'react-to-print';
+import PrintableQuotation from '../components/PrintableQuotation';
 
 const QuotationPage = () => {
   const [price, setPrice] = useState('');
@@ -11,6 +13,8 @@ const QuotationPage = () => {
   const [interestRate, setInterestRate] = useState('none');
   const [customInterestRate, setCustomInterestRate] = useState('');
   const [financingTerm, setFinancingTerm] = useState('6');
+
+  const componentRef = useRef();
 
   // Vehicle Information States
   const [model, setModel] = useState('');
@@ -96,6 +100,43 @@ const QuotationPage = () => {
       <span className="text-2xl">{expandedSection === section ? '▲' : '▼'}</span>
     </div>
   );
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  const handleSendEmail = async () => {
+    const emailContent = `
+      <h1>Vehicle Quotation</h1>
+      <p>Model: ${model}</p>
+      <p>Total: $${totalWithAdminExpenses.toFixed(2)}</p>
+      <p>Monthly Payment: $${monthlyPayment.toFixed(2)}</p>
+      <!-- Añade más detalles según sea necesario -->
+    `;
+  
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: 'client@example.com', // Aquí podrías pedir el correo del cliente
+          subject: 'Your Vehicle Quotation',
+          html: emailContent,
+        }),
+      });
+  
+      if (response.ok) {
+        alert('Quotation sent successfully!');
+      } else {
+        throw new Error('Failed to send email');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to send email. Please try again.');
+    }
+  };
 
   return (
     <Layout>
@@ -310,21 +351,42 @@ const QuotationPage = () => {
               )}
             </div>
 
-
-
-
-
-  {/* Action Buttons */}
-            <div className="flex justify-end space-x-4 mt-6">
-              <button type="button" className="px-6 py-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500">
-                Save Draft
+            {/* Action Buttons */}
+            <div className="flex flex-col md:flex-row justify-end md:space-x-4 mt-6 p-4 space-y-4 md:space-y-0">
+              <button 
+                type="button" 
+                onClick={handlePrint}
+                className="px-6 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
+                Print Quotation
               </button>
-              <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-                Generate Quote
+              <button 
+                type="button" 
+                onClick={handlePrint}
+                className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Download PDF
+              </button>
+              <button 
+                type="button" 
+                onClick={handleSendEmail}
+                className="px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                Send Email
               </button>
             </div>
+
+
+
           </form>
         </div>
+      </div>
+      <div style={{ display: 'none' }}>
+        <PrintableQuotation ref={componentRef} data={{
+          model, subModel, year, vin, price, warranty, gps, adminExpense,
+          downPayment, interestRate, financingTerm, subtotal, gst, qst,
+          totalWithTaxes, totalWithAdminExpenses, thirdSubtotal, monthlyPayment
+        }} />
       </div>
     </Layout>
   );
